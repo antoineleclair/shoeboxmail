@@ -8,5 +8,5 @@ Make sure you have `Docker`, and then:
 
 ```bash
 docker build -t shoeboxmail .
-docker run -P shoeboxmail
+docker run -P -e "PYTHONUNBUFFERED=0" shoeboxmail
 ```

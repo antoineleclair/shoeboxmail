@@ -1,11 +1,5 @@
-import os
+from setuptools import setup
 
-from setuptools import setup, find_packages
-
-here = os.path.abspath(os.path.dirname(__file__))
-
-requires = [
-    ]
 
 setup(name='shoeboxmail',
     version='0.0',
@@ -17,9 +11,12 @@ setup(name='shoeboxmail',
     author_email='',
     url='',
     keywords='',
-    install_requires=requires,
+    install_requires=[],
     packages=['shoeboxmail'],
     package_dir={'shoeboxmail': 'shoeboxmail'},
+    package_data={
+        'shoeboxmail': ['templates/*'],
+    },
     zip_safe=False,
     entry_points='''
         [console_scripts]

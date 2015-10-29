@@ -3,4 +3,5 @@ ADD . /code
 WORKDIR /code
 RUN pip install -r requirements.txt
 EXPOSE 5566
+EXPOSE 5577
 CMD [ "shoeboxmail" ]

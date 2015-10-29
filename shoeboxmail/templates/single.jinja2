@@ -1,0 +1,18 @@
+{% extends "/base.jinja2" %}
+
+{% block body %}
+
+<h1>{{ message['subject'] }}</h1>
+
+{% if 'html' in message %}
+    <div>{{ message['html'] | safe }}</div>
+{% else %}
+    <div>{{ message['text'] }}</div>
+{% endif %}
+
+<form action="{{ request.route_path('delete_msg', msg_id=message['id']) }}"
+      method="post">
+    <button type="submit" id="delete-message">Delete Message</button>
+</form>
+
+{% endblock %}

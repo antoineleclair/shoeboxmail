@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Shoebox Mail</title>
+        <style>
+            body {
+                font-family: sans-serif;
+            }
+        </style>
+    </head>
+    <body>
+        <header>
+            <p>
+                <a href="/">Shoebox Mail</a>
+            </p>
+            <form action="{{ request.route_path('delete_all') }}"
+                  method="post">
+                <button type="submit" id="delete-all">Delete All</button>
+            </form>
+        </header>
+        <div class="container">
+            {% block body %}{% endblock %}
+        </div>
+    </body>
+</html>
