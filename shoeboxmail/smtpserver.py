@@ -4,6 +4,7 @@ import email
 import asyncore
 from datetime import datetime
 import click
+from . import store
 
 
 class SMTPServer(smtpd.SMTPServer):
@@ -26,7 +27,7 @@ class SMTPServer(smtpd.SMTPServer):
                         new['html'] = part.get_payload()
                     elif mime == 'text/plain':
                         new['text'] = part.get_payload()
-            # TODO store.add(new)
+            store.add(new)
         except Exception as ex:
             click.echo('Failed to process email')
             click.echo(ex)
