@@ -1,3 +1,3 @@
-# Shoebox SMTP
+# Shoebox Mail
 
-Shoebox SMTP is an SMTP server and an HTML inbox application to use in automated browser testing.
+Shoebox Mail is an SMTP server and an HTML inbox application to use in automated browser testing.

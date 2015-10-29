@@ -7,9 +7,9 @@ here = os.path.abspath(os.path.dirname(__file__))
 requires = [
     ]
 
-setup(name='shoeboxsmtp',
+setup(name='shoeboxmail',
     version='0.0',
-    description='shoeboxsmtp',
+    description='shoeboxmail',
     classifiers=[
     "Programming Language :: Python",
     ],
@@ -18,11 +18,11 @@ setup(name='shoeboxsmtp',
     url='',
     keywords='',
     install_requires=requires,
-    packages=['shoeboxsmtp'],
-    package_dir={'shoeboxsmtp': 'shoeboxsmtp'},
+    packages=['shoeboxmail'],
+    package_dir={'shoeboxmail': 'shoeboxmail'},
     zip_safe=False,
     entry_points='''
         [console_scripts]
-        shoeboxsmtp=shoeboxsmtp:cli
+        shoeboxmail=shoeboxmail:cli
     '''
     )

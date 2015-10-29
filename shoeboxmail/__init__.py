@@ -1,7 +1,6 @@
 import time
 import click
 from .smtpserver import SMTPThread
-import asyncore
 
 
 @click.command()
