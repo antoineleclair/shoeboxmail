@@ -21,4 +21,8 @@ setup(name='shoeboxsmtp',
     packages=['shoeboxsmtp'],
     package_dir={'shoeboxsmtp': 'shoeboxsmtp'},
     zip_safe=False,
+    entry_points='''
+        [console_scripts]
+        shoeboxsmtp=shoeboxsmtp:cli
+    '''
     )
