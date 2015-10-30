@@ -2,11 +2,27 @@
 
 Shoebox Mail is an SMTP server and an HTML inbox application to use in automated browser testing.
 
-## Running
+## Using
 
 Make sure you have `Docker`, and then:
 
 ```bash
 docker build -t shoeboxmail .
-docker run -P -e "PYTHONUNBUFFERED=0" shoeboxmail
+docker run -p 5566:5566 -p 5577:5577 -e "PYTHONUNBUFFERED=0" shoeboxmail
+```
+
+Then you can send emails to `localhost:5566` and see the inbox web application running at `http://localhost:5577`.
+
+## Development
+
+Make sure to run this command once to create the egg-info directory on the host file system:
+
+```bash
+docker run -p 5566:5566 -p 5577:5577 -e "PYTHONUNBUFFERED=0" -v $(pwd):/code shoeboxmail python setup.py develop
+```
+
+Then you can run the app using the host file system directory:
+
+```bash
+docker run -p 5566:5566 -p 5577:5577 -e "PYTHONUNBUFFERED=0" -v $(pwd):/code shoeboxmail
 ```
