@@ -3,23 +3,70 @@
     <head>
         <title>Shoebox Mail</title>
         <style>
+            * {
+                box-sizing: border-box;
+            }
             body {
                 font-family: sans-serif;
+                display: flex;
+                min-height: 100vh;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                margin: 0;
+            }
+            header {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                width: 960px;
+                max-width: 100%;
+            }
+            #main-content {
+                flex: 1;
+                width: 960px;
+                max-width: 100%;
+            }
+            footer {
+                font-size: 0.9em;
+                width: 960px;
+                max-width: 100%;
+            }
+            footer h1 {
+                font-size: 1.2em;
+            }
+            table {
+                width: 100%;
             }
         </style>
     </head>
     <body>
         <header>
             <p>
-                <a href="/">Shoebox Mail</a>
+                Shoebox Mail
             </p>
+            <nav>
+                <a href="/">All Messages</a>
+            </nav>
             <form action="{{ request.route_path('delete_all') }}"
                   method="post">
-                <button type="submit" id="delete-all">Delete All</button>
+                <button type="submit" id="delete-all">
+                    Delete All
+                </button>
             </form>
         </header>
-        <div class="container">
+        <div id="main-content">
             {% block body %}{% endblock %}
         </div>
+        <footer>
+            <h1>Meta</h1>
+            <p>
+                [
+                <strong>Current Page</strong>
+                {% block currentpage %}{% endblock %}
+                ]
+            </p>
+            {% block moremeta %}{% endblock %}
+        </footer>
     </body>
 </html>

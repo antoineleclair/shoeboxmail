@@ -4,15 +4,15 @@
 
 <h1>All Messages</h1>
 
-<table class="table table-striped">
-    <thead>
-        <tr>
-            <th>To</th>
-            <th>Subject</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% if messages|length > 0 %}
+{% if messages|length > 0 %}
+    <table>
+        <thead>
+            <tr>
+                <th>To</th>
+                <th>Subject</th>
+            </tr>
+        </thead>
+        <tbody>
             {% for message in messages %}
                 <tr>
                     <td>{{ message['to'] }}</td>
@@ -23,10 +23,23 @@
                     </td>
                 </tr>
             {% endfor %}
-        {% else %}
-            <tr><td colspan="2">No message</td></tr>
-        {% endif %}
-    </tbody>
-</table>
+        </tbody>
+    </table>
+{% else %}
+    <p>No message to display.</p>
+{% endif %}
 
+{% endblock %}
+
+{% block currentpage %}
+All Messages
+{% endblock %}
+
+{% block moremeta %}
+<p>
+    [
+    <strong>Message Count</strong>
+    {{ messages|length }}
+    ]
+</p>
 {% endblock %}

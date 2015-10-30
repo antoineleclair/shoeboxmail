@@ -16,3 +16,40 @@
 </form>
 
 {% endblock %}
+
+{% block currentpage %}
+Single Message
+{% endblock %}
+
+{% block moremeta %}
+<p>
+    [
+    <strong>Subject</strong>
+    {{ message['subject'] }}
+    ]
+</p>
+<p>
+    [
+    <strong>To</strong>
+    {{ message['to'] }}
+    ]
+</p>
+<p>
+    [
+    <strong>From</strong>
+    {{ message['from'] }}
+    ]
+</p>
+<p>
+    [
+    <strong>HTML</strong>
+    {{ message['html'] }}
+    ]
+</p>
+<p>
+    [
+    <strong>Text</strong>
+    {{ message['text'] }}
+    ]
+</p>
+{% endblock %}
