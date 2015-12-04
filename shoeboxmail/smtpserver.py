@@ -17,6 +17,8 @@ class SMTPServer(smtpd.SMTPServer):
                 'from': msg['From'],
                 'subject': msg['Subject'],
                 'received': datetime.utcnow(),
+                'html': None,
+                'text': None,
                 }
             click.echo('Received email for {}: {}'.format(new['to'],
                                                           new['subject']))
@@ -27,6 +29,12 @@ class SMTPServer(smtpd.SMTPServer):
                         new['html'] = part.get_payload()
                     elif mime == 'text/plain':
                         new['text'] = part.get_payload()
+            else:
+                mime = msg.get_content_type()
+                if mime == 'text/html':
+                    new['html'] = msg.get_payload()
+                elif mime == 'text/plain':
+                    new['text'] = msg.get_payload()
             store.add(new)
         except Exception as ex:
             click.echo('Failed to process email')
