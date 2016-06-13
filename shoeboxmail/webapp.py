@@ -1,6 +1,7 @@
 import threading
 import os
-from wsgiref.simple_server import make_server
+from wsgiref.simple_server import make_server, WSGIServer
+from socketserver import ThreadingMixIn
 from pyramid.config import Configurator
 from pyramid.view import view_config
 from pyramid.httpexceptions import HTTPNotFound, HTTPFound
@@ -49,6 +50,10 @@ def delete_msg(request):
     return HTTPFound(request.route_path('list'))
 
 
+class ThreadingWSGIServer(ThreadingMixIn, WSGIServer):
+    daemon_threads = True
+
+
 class WebAppThread(threading.Thread):
 
     def run(self):
@@ -64,7 +69,7 @@ class WebAppThread(threading.Thread):
         config.add_route('delete_msg', '/message/{msg_id}/delete')
         config.scan()
         app = config.make_wsgi_app()
-        self.server = make_server('0.0.0.0', 5577, app)
+        self.server = make_server('0.0.0.0', 5577, app, ThreadingWSGIServer)
         self.server.serve_forever()
 
     def stop(self):
