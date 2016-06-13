@@ -2,12 +2,14 @@
 
 {% block body %}
 
-<h1>{{ message['subject'] }}</h1>
+<h1 id="message-subject">{{ message['subject'] }}</h1>
 
 {% if 'html' in message %}
-    <div>{{ message['html'] | safe }}</div>
+    <div id="message-content"
+        class="message-content html-message">{{ message['html'] | safe }}</div>
 {% else %}
-    <div>{{ message['text'] }}</div>
+    <div id="message-subject"
+        class="message-content plain-text-message">{{ message['text'] }}</div>
 {% endif %}
 
 <form action="{{ request.route_path('delete_msg', msg_id=message['id']) }}"
