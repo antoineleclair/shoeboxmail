@@ -1,18 +1,33 @@
+import signal
 import time
 import click
 from .smtpserver import SMTPThread
 from .webapp import WebAppThread
 
 
+should_stop = False
+
 @click.command()
 def cli():
+    global should_stop
     try:
         smtp_thread = SMTPThread()
         smtp_thread.start()
         webapp_thread = WebAppThread()
         webapp_thread.start()
-        while True: time.sleep(100)
+        should_stop = False
+        def received_sigterm(signum, frame):
+            global should_stop
+            click.echo('Received SIGTERM signal.')
+            should_stop = True
+        signal.signal(signal.SIGTERM, received_sigterm)
+        while True:
+            if should_stop:
+                break
+            time.sleep(1)
     except (KeyboardInterrupt, SystemExit):
+        pass
+    finally:
         click.echo('Exiting...')
         smtp_thread.stop()
         webapp_thread.stop()
