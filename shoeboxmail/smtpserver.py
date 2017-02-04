@@ -1,6 +1,7 @@
 import smtpd
 import threading
 import email
+from email import policy
 import asyncore
 from datetime import datetime
 import click
@@ -9,9 +10,9 @@ from . import store
 
 class SMTPServer(smtpd.SMTPServer):
 
-    def process_message(self, peer, mailfrom, rcpttos, data):
+    def process_message(self, peer, mailfrom, rcpttos, data, **kwargs):
         try:
-            msg = email.message_from_string(data)
+            msg = email.message_from_bytes(data, policy=policy.default)
             new = {
                 'to': msg['To'],
                 'from': msg['From'],
@@ -26,15 +27,15 @@ class SMTPServer(smtpd.SMTPServer):
                 for part in msg.walk():
                     mime = part.get_content_type()
                     if mime == 'text/html':
-                        new['html'] = part.get_payload()
+                        new['html'] = part.get_content()
                     elif mime == 'text/plain':
-                        new['text'] = part.get_payload()
+                        new['text'] = part.get_content()
             else:
                 mime = msg.get_content_type()
                 if mime == 'text/html':
-                    new['html'] = msg.get_payload()
+                    new['html'] = msg.get_content()
                 elif mime == 'text/plain':
-                    new['text'] = msg.get_payload()
+                    new['text'] = msg.get_content()
             store.add(new)
         except Exception as ex:
             click.echo('Failed to process email')
