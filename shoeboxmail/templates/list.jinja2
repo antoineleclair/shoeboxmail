@@ -2,7 +2,18 @@
 
 {% block body %}
 
-<h1>All Messages</h1>
+{% if to %}
+  <h1>Messages to {{ to }}</h1>
+  <form action="{{ request.route_path('delete_all') }}"
+        method="post">
+      <input type="hidden" name="to" value="{{ to }}"/>
+      <button type="submit" id="delete-msgs-to">
+          Delete messages to {{ to }}
+      </button>
+  </form>
+{% else %}
+  <h1>All Messages</h1>
+{% endif %}
 
 {% if messages|length > 0 %}
     <table>
@@ -32,7 +43,7 @@
 {% endblock %}
 
 {% block currentpage %}
-All Messages
+Messages to {{ to }}
 {% endblock %}
 
 {% block moremeta %}

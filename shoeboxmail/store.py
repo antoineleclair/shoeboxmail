@@ -1,8 +1,11 @@
 emails = []
 _next_id = 1
 
-def get_all():
-    return emails
+def get_msgs(to=None):
+    if to is not None:
+      return [email for email in emails if email['to'] == to]
+    else:
+      return emails
 
 def find(msg_id):
     msg_id = int(msg_id)
@@ -27,5 +30,12 @@ def delete_msg(msg_id):
     msg_id = int(msg_id)
     for i, email in enumerate(emails):
         if email['id'] == msg_id:
+            del emails[i]
+            break
+
+def delete_msgs(to):
+    global emails
+    for i, email in enumerate(emails):
+        if email['to'] == to:
             del emails[i]
             break

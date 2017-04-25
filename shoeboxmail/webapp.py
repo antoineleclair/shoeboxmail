@@ -15,9 +15,11 @@ here = os.path.dirname(os.path.abspath(__file__))
     route_name='list',
     renderer='list.jinja2',
     )
-def list(request):
+def list_msgs(request):
+    to = request.GET.get('to')
     return dict(
-        messages=store.get_all(),
+        to=to,
+        messages=store.get_msgs(to=to),
         )
 
 @view_config(
@@ -38,7 +40,11 @@ def single(request):
     request_method='POST',
     )
 def delete_all(request):
-    store.delete_all()
+    to = request.POST.get('to', '').strip()
+    if len(to) > 0:
+      store.delete_msgs(to=to)
+    else:
+      store.delete_all()
     return HTTPFound(request.route_path('list'))
 
 @view_config(
