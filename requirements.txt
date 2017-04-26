@@ -2,3 +2,4 @@
 click==5.1
 pyramid==1.5.7
 pyramid_jinja2==2.5
+waitress==1.0.2

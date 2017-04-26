@@ -1,8 +1,9 @@
 import signal
 import time
+import multiprocessing
 import click
 from .smtpserver import SMTPThread
-from .webapp import WebAppThread
+from .webapp import WebAppProcess
 
 
 should_stop = False
@@ -11,9 +12,10 @@ should_stop = False
 def cli():
     global should_stop
     try:
-        smtp_thread = SMTPThread()
+        queue = multiprocessing.Queue()
+        smtp_thread = SMTPThread(queue)
         smtp_thread.start()
-        webapp_thread = WebAppThread()
+        webapp_thread = WebAppProcess(queue)
         webapp_thread.start()
         should_stop = False
         def received_sigterm(signum, frame):

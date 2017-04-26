@@ -1,7 +1,8 @@
+import multiprocessing
 import threading
 import os
 from wsgiref.simple_server import make_server, WSGIServer
-from socketserver import ThreadingMixIn
+from waitress import serve
 from pyramid.config import Configurator
 from pyramid.view import view_config
 from pyramid.httpexceptions import HTTPNotFound, HTTPFound
@@ -41,11 +42,13 @@ def single(request):
     )
 def delete_all(request):
     to = request.POST.get('to', '').strip()
+    query = dict()
     if len(to) > 0:
       store.delete_msgs(to=to)
+      query['to'] = to
     else:
       store.delete_all()
-    return HTTPFound(request.route_path('list'))
+    return HTTPFound(request.route_path('list', _query=query))
 
 @view_config(
     route_name='delete_msg',
@@ -56,11 +59,24 @@ def delete_msg(request):
     return HTTPFound(request.route_path('list'))
 
 
-class ThreadingWSGIServer(ThreadingMixIn, WSGIServer):
-    daemon_threads = True
+class MessageReceiverThread(threading.Thread):
+
+    def __init__(self, queue, *args, **kw):
+        self.queue = queue
+        super().__init__(*args, **kw)
+
+    def run(self):
+        click.echo('Starting message receiver thread in HTTP server')
+        while True:
+            msg = self.queue.get()
+            store.add(msg)
 
 
-class WebAppThread(threading.Thread):
+class WebAppProcess(multiprocessing.Process):
+
+    def __init__(self, queue, *args, **kw):
+        self.queue = queue
+        super().__init__(*args, **kw)
 
     def run(self):
         click.echo('Starting HTTP server')
@@ -75,10 +91,10 @@ class WebAppThread(threading.Thread):
         config.add_route('delete_msg', '/message/{msg_id}/delete')
         config.scan()
         app = config.make_wsgi_app()
-        self.server = make_server('0.0.0.0', 5577, app, ThreadingWSGIServer)
-        self.server.serve_forever()
+        self.receiver = MessageReceiverThread(self.queue)
+        self.receiver.start()
+        serve(app, listen='*:5577')
 
     def stop(self):
         click.echo('Stopping HTTP server')
-        self.server.shutdown()
-        self.join()
+        self.terminate()

@@ -10,6 +10,10 @@ from . import store
 
 class SMTPServer(smtpd.SMTPServer):
 
+    def __init__(self, queue, *args, **kw):
+        self.queue = queue
+        super().__init__(*args, **kw)
+
     def process_message(self, peer, mailfrom, rcpttos, data, **kwargs):
         try:
             msg = email.message_from_bytes(data, policy=policy.default)
@@ -36,7 +40,7 @@ class SMTPServer(smtpd.SMTPServer):
                     new['html'] = msg.get_content()
                 elif mime == 'text/plain':
                     new['text'] = msg.get_content()
-            store.add(new)
+            self.queue.put(new)
         except Exception as ex:
             click.echo('Failed to process email')
             click.echo(ex)
@@ -44,9 +48,13 @@ class SMTPServer(smtpd.SMTPServer):
 
 class SMTPThread(threading.Thread):
 
+    def __init__(self, queue, *args, **kw):
+        self.queue = queue
+        super().__init__(*args, **kw)
+
     def run(self):
         click.echo('Starting SMTP server')
-        self.server = SMTPServer(('0.0.0.0', 5566), None)
+        self.server = SMTPServer(self.queue, ('0.0.0.0', 5566), None)
         asyncore.loop(timeout=0.5)
 
     def stop(self):
