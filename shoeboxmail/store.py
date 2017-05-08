@@ -35,7 +35,6 @@ def delete_msg(msg_id):
 
 def delete_msgs(to):
     global emails
-    for i, email in enumerate(emails):
+    for i, email in reversed(list(enumerate(emails))):
         if email['to'] == to:
             del emails[i]
-            break
