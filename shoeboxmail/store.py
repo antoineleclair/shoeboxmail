@@ -1,3 +1,7 @@
+import os
+
+
+MAX_EMAILS = int(os.environ.get('SHOEBOXMAIL_MAX_EMAILS', '1000'))
 emails = []
 _next_id = 1
 
@@ -19,6 +23,7 @@ def add(msg):
     msg['id'] = _next_id
     _next_id += 1
     emails.append(msg)
+    emails = emails[-MAX_EMAILS:]
 
 def delete_all():
     global emails
