@@ -1,5 +1,5 @@
 -e .
-click==5.1
-pyramid==1.5.7
-pyramid_jinja2==2.5
-waitress==1.0.2
+click==7.1.2
+pyramid==1.10.4
+pyramid_jinja2==2.8
+waitress==1.4.4

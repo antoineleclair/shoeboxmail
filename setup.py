@@ -1,25 +1,26 @@
 from setuptools import setup
 
 
-setup(name='shoeboxmail',
-    version='0.9',
-    description='shoeboxmail',
+setup(
+    name="shoeboxmail",
+    version="0.9.1",
+    description="shoeboxmail",
     classifiers=[
-    "Programming Language :: Python",
+        "Programming Language :: Python",
     ],
-    author='',
-    author_email='',
-    url='',
-    keywords='',
+    author="",
+    author_email="",
+    url="",
+    keywords="",
     install_requires=[],
-    packages=['shoeboxmail'],
-    package_dir={'shoeboxmail': 'shoeboxmail'},
+    packages=["shoeboxmail"],
+    package_dir={"shoeboxmail": "shoeboxmail"},
     package_data={
-        'shoeboxmail': ['templates/*'],
+        "shoeboxmail": ["templates/*"],
     },
     zip_safe=False,
-    entry_points='''
+    entry_points="""
         [console_scripts]
         shoeboxmail=shoeboxmail:cli
-    '''
-    )
+    """,
+)
