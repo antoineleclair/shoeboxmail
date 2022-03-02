@@ -20,6 +20,7 @@ class SMTPServer(smtpd.SMTPServer):
             new = {
                 'to': msg['To'],
                 'from': msg['From'],
+                'replyTo': msg['ReplyTo'],
                 'subject': msg['Subject'],
                 'received': datetime.utcnow(),
                 'html': None,
