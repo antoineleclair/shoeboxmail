@@ -3,10 +3,7 @@
     <head>
         <title>Shoebox Mail</title>
         <style>
-            * {
-                box-sizing: border-box;
-            }
-            body {
+            .shoe-body {
                 font-family: sans-serif;
                 display: flex;
                 min-height: 100vh;
@@ -15,33 +12,33 @@
                 align-items: center;
                 margin: 0;
             }
-            header {
+            .shoe-header {
                 display: flex;
                 align-items: center;
                 justify-content: space-between;
-                width: 960px;
-                max-width: 100%;
+                max-width: 960px;
+                width: 100%;
             }
-            #main-content {
+            #shoe-main-content {
                 flex: 1;
-                width: 960px;
-                max-width: 100%;
+                max-width: 960px;
+                width: 100%;
             }
-            footer {
+            .shoe-footer {
                 font-size: 0.9em;
-                width: 960px;
-                max-width: 100%;
+                max-width: 960px;
+                width: 100%;
             }
-            footer h1 {
+            .shoe-footer h1 {
                 font-size: 1.2em;
             }
-            table {
+            .shoe-table {
                 width: 100%;
             }
         </style>
     </head>
-    <body>
-        <header>
+    <body class="shoe-body">
+        <header class="shoe-header">
             <p>
                 Shoebox Mail
             </p>
@@ -55,10 +52,10 @@
                 </button>
             </form>
         </header>
-        <div id="main-content">
+        <div id="shoe-main-content">
             {% block body %}{% endblock %}
         </div>
-        <footer>
+        <footer class="shoe-footer">
             <h1>Meta</h1>
             <p>
                 [
