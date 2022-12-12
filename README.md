@@ -12,7 +12,7 @@ In your `docker-compose.yml` file, declare the `mail` service, and add a link in
 
 ```yml
 mail:
-  image: antoineleclair/shoeboxmail:0.11.0
+  image: antoineleclair/shoeboxmail:0.12.0
   ports:
     - "5566:5566"
     - "5577:5577"
@@ -26,7 +26,7 @@ your_app:
 ### With Docker
 
 ```bash
-docker run -p 5566:5566 -p 5577:5577 antoineleclair/shoeboxmail:0.11.0
+docker run -p 5566:5566 -p 5577:5577 antoineleclair/shoeboxmail:0.12.0
 ```
 
 ## Current Limitations
@@ -41,14 +41,17 @@ Build:
 docker build -t shoeboxmail .
 ```
 
-Make sure to run this command once to create the `egg-info` directory on the host file system:
-
-```bash
-docker run -p 5566:5566 -p 5577:5577 -v $(pwd):/code shoeboxmail python setup.py develop
-```
-
 Then you can run the app using the host file system directory:
 
 ```bash
-docker run -p 5566:5566 -p 5577:5577 -v $(pwd):/code shoeboxmail
+docker run -p 5566:5566 -p 5577:5577 -v $(pwd):/code -v /code/shoeboxmail.egg-info shoeboxmail
+```
+
+And here are a few useful commands:
+
+```bash
+docker run -v $(pwd):/code -v /code/shoeboxmail.egg-info shoeboxmail black .
+docker run -v $(pwd):/code -v /code/shoeboxmail.egg-info shoeboxmail pylint shoeboxmail
+docker run -v $(pwd):/code -v /code/shoeboxmail.egg-info shoeboxmail mypy shoeboxmail
+docker run -v $(pwd):/code -v /code/shoeboxmail.egg-info shoeboxmail isort .
 ```

@@ -2,17 +2,17 @@
 
 {% block body %}
 
-<h1 id="message-subject">{{ message['subject'] }}</h1>
+<h1 id="message-subject">{{ message.subject }}</h1>
 
 {% if 'html' in message %}
     <div id="message-content"
-        class="message-content html-message">{{ message['html'] | safe }}</div>
+        class="message-content html-message">{{ message.html | safe }}</div>
 {% else %}
     <div id="message-subject"
-        class="message-content plain-text-message">{{ message['text'] }}</div>
+        class="message-content plain-text-message">{{ message.text }}</div>
 {% endif %}
 
-<form action="{{ request.route_path('delete_msg', msg_id=message['id']) }}"
+<form action="{{ request.route_path('delete_msg', msg_id=message.id) }}"
       method="post">
     <button type="submit" id="delete-message">Delete Message</button>
 </form>
@@ -27,37 +27,37 @@ Single Message
 <p>
     [
     <strong>Subject</strong>
-    {{ message['subject'] }}
+    {{ message.subject }}
     ]
 </p>
 <p>
     [
     <strong>To</strong>
-    {{ message['to'] }}
+    {{ message.to }}
     ]
 </p>
 <p>
     [
     <strong>From</strong>
-    {{ message['from'] }}
+    {{ message.from_ }}
     ]
 </p>
 <p>
     [
     <strong>Reply To</strong>
-    {{ message['replyTo'] }}
+    {{ message.reply_to }}
     ]
 </p>
 <p>
     [
     <strong>HTML</strong>
-    {{ message['html'] }}
+    {{ message.html }}
     ]
 </p>
 <p>
     [
     <strong>Text</strong>
-    {{ message['text'] }}
+    {{ message.text }}
     ]
 </p>
 {% endblock %}

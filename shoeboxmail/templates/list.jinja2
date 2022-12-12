@@ -26,10 +26,10 @@
         <tbody>
             {% for message in messages %}
                 <tr>
-                    <td>{{ message['to'] }}</td>
+                    <td>{{ message.to }}</td>
                     <td>
-                        <a href="{{ request.route_path('single', msg_id=message['id'])}}">
-                            {{ message['subject'] }}
+                        <a href="{{ request.route_path('single', msg_id=message.id)}}">
+                            {{ message.subject }}
                         </a>
                     </td>
                 </tr>

@@ -1,12 +1,14 @@
+import multiprocessing
 import signal
 import time
-import multiprocessing
+
 import click
+
 from .smtpserver import SMTPThread
 from .webapp import WebAppProcess
 
+should_stop: bool = False
 
-should_stop = False
 
 @click.command()
 def cli():
@@ -18,10 +20,12 @@ def cli():
         webapp_thread = WebAppProcess(queue)
         webapp_thread.start()
         should_stop = False
-        def received_sigterm(signum, frame):
+
+        def received_sigterm(signum, frame):  # pylint: disable=unused-argument
             global should_stop
-            click.echo('Received SIGTERM signal.')
+            click.echo("Received SIGTERM signal.")
             should_stop = True
+
         signal.signal(signal.SIGTERM, received_sigterm)
         while True:
             if should_stop:
@@ -30,6 +34,6 @@ def cli():
     except (KeyboardInterrupt, SystemExit):
         pass
     finally:
-        click.echo('Exiting...')
+        click.echo("Exiting...")
         smtp_thread.stop()
         webapp_thread.stop()
