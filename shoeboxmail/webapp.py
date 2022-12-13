@@ -114,7 +114,7 @@ def api_single(request):
     request_method="DELETE",
 )
 def api_delete_all(request):
-    to = request.POST.get("to", "").strip()
+    to = request.GET.get("to", "").strip()
     query = dict()
     if len(to) > 0:
         store.delete_msgs(to=to)

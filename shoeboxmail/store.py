@@ -1,5 +1,6 @@
 import os
 from dataclasses import dataclass
+from datetime import datetime
 from typing import List
 
 
@@ -9,7 +10,7 @@ class Message:
     from_: str
     reply_to: str
     subject: str
-    received: str
+    received: datetime
     html: str | None
     text: str | None
     id: int | None = None
