@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name="shoeboxmail",
-    version="0.12.1",
+    version="0.12.2",
     description="shoeboxmail",
     classifiers=[
         "Programming Language :: Python",

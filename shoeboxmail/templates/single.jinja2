@@ -4,7 +4,7 @@
 
 <h1 id="message-subject">{{ message.subject }}</h1>
 
-{% if 'html' in message %}
+{% if message.html != None %}
     <div id="message-content"
         class="message-content html-message">{{ message.html | safe }}</div>
 {% else %}
