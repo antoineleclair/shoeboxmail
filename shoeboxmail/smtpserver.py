@@ -1,29 +1,43 @@
-import asyncore  # pylint: disable=deprecated-module
 import email
-import smtpd  # pylint: disable=deprecated-module
 import threading
-from datetime import datetime
+from datetime import datetime, timezone
 from email import policy
 
 import click
+from aiosmtpd.controller import Controller
+from aiosmtpd.smtp import (
+    SMTP as SMTPServer,
+    Envelope as SMTPEnvelope,
+    Session as SMTPSession,
+)
 
 from shoeboxmail.store import Message
 
 
-class SMTPServer(smtpd.SMTPServer):
-    def __init__(self, queue, *args, **kw):
+class SMTPHandler:  # pylint: disable=too-few-public-methods
+    def __init__(self, queue):
         self.queue = queue
-        super().__init__(*args, **kw)
 
-    def process_message(self, peer, mailfrom, rcpttos, data, **kwargs):
+    async def handle_DATA(
+        self,
+        server: SMTPServer,  # pylint: disable=unused-argument
+        session: SMTPSession,  # pylint: disable=unused-argument
+        envelope: SMTPEnvelope,
+    ) -> str:
         try:
-            msg = email.message_from_bytes(data, policy=policy.default)
+            if envelope.original_content is None:
+                raise Exception(
+                    "Emtpy content"
+                )  # pylint: disable=broad-exception-raised
+            msg = email.message_from_bytes(
+                envelope.original_content, policy=policy.default
+            )
             new = Message(
                 to=msg["To"],
                 from_=msg["From"],
                 reply_to=msg["ReplyTo"],
                 subject=msg["Subject"],
-                received=datetime.utcnow(),
+                received=datetime.now(timezone.utc),
                 html=None,
                 text=None,
             )
@@ -32,19 +46,21 @@ class SMTPServer(smtpd.SMTPServer):
                 for part in msg.walk():
                     mime = part.get_content_type()
                     if mime == "text/html":
-                        new.html = part.get_content()
+                        new.html = part.get_content()  # type:ignore[attr-defined]
                     elif mime == "text/plain":
-                        new.text = part.get_content()
+                        new.text = part.get_content()  # type:ignore[attr-defined]
             else:
                 mime = msg.get_content_type()
                 if mime == "text/html":
-                    new.html = msg.get_content()
+                    new.html = msg.get_content()  # type:ignore[attr-defined]
                 elif mime == "text/plain":
-                    new.text = msg.get_content()
+                    new.text = msg.get_content()  # type:ignore[attr-defined]
             self.queue.put(new)
+            return "250 OK"
         except Exception as ex:  # pylint: disable=broad-except
             click.echo("Failed to process email")
             click.echo(ex)
+            return "500 Could not process your message"
 
 
 class SMTPThread(threading.Thread):
@@ -55,10 +71,11 @@ class SMTPThread(threading.Thread):
 
     def run(self):
         click.echo("Starting SMTP server")
-        self.server = SMTPServer(self.queue, ("0.0.0.0", 5566), None)
-        asyncore.loop(timeout=0.5)
+        handler = SMTPHandler(queue=self.queue)
+        self.server = Controller(handler, hostname="0.0.0.0", port=5566)
+        self.server.start()
 
     def stop(self):
         click.echo("Stopping SMTP server")
-        self.server.close()
+        self.server.stop()
         self.join()
