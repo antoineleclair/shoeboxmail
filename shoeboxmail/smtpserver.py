@@ -66,15 +66,19 @@ class SMTPHandler:  # pylint: disable=too-few-public-methods
                     else:
                         mime = part.get_content_type()
                         if mime == "text/html":
-                            new.html = part.get_content()
+                            new.html = cast(
+                                bytes, part.get_payload(decode=True)
+                            ).decode("utf-8")
                         elif mime == "text/plain":
-                            new.text = part.get_content()
+                            new.text = cast(
+                                bytes, part.get_payload(decode=True)
+                            ).decode("utf-8")
             else:
                 mime = msg.get_content_type()
                 if mime == "text/html":
-                    new.html = msg.get_content()
+                    new.html = cast(bytes, msg.get_payload(decode=True)).decode("utf-8")
                 elif mime == "text/plain":
-                    new.text = msg.get_content()
+                    new.text = cast(bytes, msg.get_payload(decode=True)).decode("utf-8")
             self.queue.put(new)
             return "250 OK"
         except Exception as ex:  # pylint: disable=broad-except

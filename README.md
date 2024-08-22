@@ -51,7 +51,7 @@ And here are a few useful commands:
 
 ```bash
 docker run -v $(pwd):/code -v /code/shoeboxmail.egg-info shoeboxmail black .
-docker run -v $(pwd):/code -v /code/shoeboxmail.egg-info shoeboxmail pylint shoeboxmail
-docker run -v $(pwd):/code -v /code/shoeboxmail.egg-info shoeboxmail mypy shoeboxmail
 docker run -v $(pwd):/code -v /code/shoeboxmail.egg-info shoeboxmail isort .
+docker run -v $(pwd):/code -v /code/shoeboxmail.egg-info shoeboxmail mypy shoeboxmail
+docker run -v $(pwd):/code -v /code/shoeboxmail.egg-info shoeboxmail pylint shoeboxmail
 ```
