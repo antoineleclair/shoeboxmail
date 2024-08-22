@@ -2,6 +2,8 @@ import email
 import threading
 from datetime import datetime, timezone
 from email import policy
+from email.message import EmailMessage
+from typing import cast
 
 import click
 from aiosmtpd.controller import Controller
@@ -11,7 +13,7 @@ from aiosmtpd.smtp import (
     Session as SMTPSession,
 )
 
-from shoeboxmail.store import Message
+from shoeboxmail.store import Attachment, Message
 
 
 class SMTPHandler:  # pylint: disable=too-few-public-methods
@@ -26,11 +28,16 @@ class SMTPHandler:  # pylint: disable=too-few-public-methods
     ) -> str:
         try:
             if envelope.original_content is None:
-                raise Exception(
+                raise Exception(  # pylint: disable=broad-exception-raised
                     "Emtpy content"
-                )  # pylint: disable=broad-exception-raised
-            msg = email.message_from_bytes(
-                envelope.original_content, policy=policy.default
+                )
+            msg = cast(
+                EmailMessage,
+                email.message_from_bytes(
+                    envelope.original_content,
+                    policy=policy.default,
+                    _class=EmailMessage,
+                ),
             )
             new = Message(
                 to=msg["To"],
@@ -40,21 +47,34 @@ class SMTPHandler:  # pylint: disable=too-few-public-methods
                 received=datetime.now(timezone.utc),
                 html=None,
                 text=None,
+                attachments=[],
             )
             click.echo(f"Received email for {new.to}: {new.subject}")
             if msg.is_multipart():
                 for part in msg.walk():
-                    mime = part.get_content_type()
-                    if mime == "text/html":
-                        new.html = part.get_content()  # type:ignore[attr-defined]
-                    elif mime == "text/plain":
-                        new.text = part.get_content()  # type:ignore[attr-defined]
+                    if part.is_attachment():
+                        filename = part.get_filename()
+                        content_type = part.get_content_type()
+                        assert filename is not None
+                        assert content_type is not None
+                        attachment = Attachment(
+                            filename=filename,
+                            content_type=content_type,
+                            content=cast(bytes, part.get_payload(decode=True)),
+                        )
+                        new.attachments.append(attachment)
+                    else:
+                        mime = part.get_content_type()
+                        if mime == "text/html":
+                            new.html = part.get_content()
+                        elif mime == "text/plain":
+                            new.text = part.get_content()
             else:
                 mime = msg.get_content_type()
                 if mime == "text/html":
-                    new.html = msg.get_content()  # type:ignore[attr-defined]
+                    new.html = msg.get_content()
                 elif mime == "text/plain":
-                    new.text = msg.get_content()  # type:ignore[attr-defined]
+                    new.text = msg.get_content()
             self.queue.put(new)
             return "250 OK"
         except Exception as ex:  # pylint: disable=broad-except

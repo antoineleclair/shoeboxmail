@@ -1,3 +1,4 @@
+import base64
 import multiprocessing
 import os
 import threading
@@ -77,9 +78,17 @@ def api_list(request):
                 "from": msg.from_,
                 "replyTo": msg.reply_to,
                 "subject": msg.subject,
-                "received": f"{msg.received.isoformat()}Z",
+                "received": f"{msg.received.replace(tzinfo=None).isoformat()}Z",
                 "html": msg.html,
                 "text": msg.text,
+                "attachments": [
+                    {
+                        "filename": attachment.filename,
+                        "content": base64.b64encode(attachment.content).decode("utf-8"),
+                        "contentType": attachment.content_type,
+                    }
+                    for attachment in msg.attachments
+                ],
             }
             for msg in store.get_msgs(to=to)
         ],
@@ -105,6 +114,14 @@ def api_single(request):
             "received": f"{msg.received.isoformat()}Z",
             "html": msg.html,
             "text": msg.text,
+            "attachments": [
+                {
+                    "filename": attachment.filename,
+                    "content": base64.b64encode(attachment.content).decode("utf-8"),
+                    "contentType": attachment.content_type,
+                }
+                for attachment in msg.attachments
+            ],
         },
     )
 

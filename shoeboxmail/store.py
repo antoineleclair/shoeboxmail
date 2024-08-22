@@ -5,6 +5,13 @@ from typing import List
 
 
 @dataclass
+class Attachment:
+    filename: str
+    content: bytes
+    content_type: str
+
+
+@dataclass
 class Message:
     to: str
     from_: str
@@ -13,6 +20,7 @@ class Message:
     received: datetime
     html: str | None
     text: str | None
+    attachments: list[Attachment]
     id: int | None = None
 
 

@@ -19,6 +19,7 @@
 
 {% endblock %}
 
+
 {% block currentpage %}
 Single Message
 {% endblock %}
@@ -46,6 +47,14 @@ Single Message
     [
     <strong>Reply To</strong>
     {{ message.reply_to }}
+    ]
+</p>
+<p>
+    [
+    <strong>Attachments</strong>
+    {% for attachment in message.attachments %}
+        {{ attachment.filename }}{% if not loop.last %}, {% endif %}
+    {% endfor %}
     ]
 </p>
 <p>
