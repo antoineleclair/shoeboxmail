@@ -12,7 +12,7 @@ In your `docker-compose.yml` file, declare the `mail` service, and add a link in
 
 ```yml
 mail:
-  image: antoineleclair/shoeboxmail:0.12.2
+  image: antoineleclair/shoeboxmail:0.15.0
   ports:
     - "5566:5566"
     - "5577:5577"
@@ -26,7 +26,7 @@ your_app:
 ### With Docker
 
 ```bash
-docker run -p 5566:5566 -p 5577:5577 antoineleclair/shoeboxmail:0.12.2
+docker run -d -p 5566:5566 -p 5577:5577 antoineleclair/shoeboxmail:0.15.0 shoeboxmail
 ```
 
 ## Current Limitations

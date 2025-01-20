@@ -1,0 +1,16 @@
+{
+    "version": "1.0",
+    "services":
+    {
+        "web":
+        {
+            "image": "antoineleclair/shoeboxmail:0.15.0",
+            "port": 5577,
+            "publishedPorts": [{
+                "publishedAs": 5566,
+                "fromContainerPort": 5566,
+                "protocol": "tcp"
+            }]
+        }
+    }
+}

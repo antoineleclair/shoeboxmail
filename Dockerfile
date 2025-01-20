@@ -1,8 +1,11 @@
 FROM python:3.12.5
-COPY . /code
+ENV PYTHONUNBUFFERED=0
 WORKDIR /code
-ENV PYTHONUNBUFFERED 0
+ADD setup.py /code/.
+ADD requirements.txt /code/.
 RUN pip install -r requirements.txt
+ADD . /code/.
+RUN python setup.py develop
 EXPOSE 5566
 EXPOSE 5577
 CMD [ "shoeboxmail" ]

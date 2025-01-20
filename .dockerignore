@@ -1,0 +1,4 @@
+shoeboxmail.egg-info
+.git
+**/__pycache__
+*.pyc
